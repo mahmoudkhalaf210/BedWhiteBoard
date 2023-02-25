@@ -1,0 +1,28 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../gfont/Open_Sans/OpenSans-Regular.ttf') format('truetype');
+
+}
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+    src: url('../gfont/Oswald/Oswald-Regular.ttf') format('truetype');
+
+
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+    src: url('../gfont/Roboto/Roboto-Light.ttf') format('truetype');
+
+}
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+    src: url('../gfont/Roboto_Condensed/RobotoCondensed-Regular.ttf') format('truetype');
+}

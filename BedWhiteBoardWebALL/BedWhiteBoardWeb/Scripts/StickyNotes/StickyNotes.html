@@ -1,0 +1,54 @@
+﻿
+
+ <div  class="note"   data-bind="attr: {  id: 'insticknotes' + Patient_id() },click:pouppos" >
+    <a href="javascript:;"  data-bind="click:rmoveSticknote" class="button remove "><i class="fa fa-times" aria-hidden="true"></i></a>
+    <div class="note_cnt">
+        <span class="note-p-name" data-bind="text:patientname"></span>
+        <span class="note-p-id" data-bind="text:HMRN"></span>
+
+
+        <!-- ko if: showonly -->
+
+        <div class="sticky-view">
+            <a  class="backtoall" data-bind="click:backtoall"> <!-- Back --><i class="fa fa-arrow-left" aria-hidden="true"></i> </a>
+            
+            <textarea class="cnt" data-bind="value:Pat_Notes "  readonly></textarea>
+
+            <a class="del-stick-notes" data-bind="click:DeleteSticknote"> <!-- delete --> <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
+        </div>
+
+        <!-- /ko -->
+        
+
+        <!-- ko if: addnew -->
+
+        <div class="sticky-addnew">
+            <a class="backtoall" data-bind="click:backtoall"> <!-- Back --><i class="fa fa-arrow-left" aria-hidden="true"></i> </a>
+            <textarea class="cnt" data-bind="value:Pat_Notes,valueUpdate: 'afterkeydown'" placeholder="Enter note description here"></textarea>
+            <a class="save-stickynote" data-bind="click:addSticknote"> <!-- save --><i class="fa fa-floppy-o" aria-hidden="true"></i> </a>
+        </div>
+
+        <!-- /ko -->
+
+      
+
+     
+
+        <!-- ko if: showall -->
+
+        <div class="AllCards">
+            <ul data-bind="foreach: listofnotes">
+                <li data-bind="click:$parent.fireviewOnly">
+                    <span data-bind="text:Staffname"> </span>
+                    <span data-bind="text:note_date"> </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- /ko -->
+       
+        <a class="note-p-addnew" data-bind="click:FireAddNew"> <!-- Add New --><i class="fa fa-plus-circle" aria-hidden="true"></i> </a>
+
+    </div> 
+    
+</div>
