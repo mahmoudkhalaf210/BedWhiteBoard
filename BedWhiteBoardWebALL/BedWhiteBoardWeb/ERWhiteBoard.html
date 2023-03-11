@@ -119,10 +119,14 @@
             right: 0px;
         }
 
-        .addBorderSearch {
-            border-style: solid;
-            border-color: yellow;
-            border-width: 5px;
+        div#erNotOnBed .addBorderSearch td {
+            border-top: 3px solid yellow !important;
+            border-bottom: 3px solid yellow;
+        }
+
+        .addBorderSearch td {
+            border-top: 3px solid yellow !important;
+            border-bottom: 3px solid yellow;
         }
 
         .ordertimeNormal {
@@ -529,8 +533,7 @@
             width: 100%;
         }
 
-        #erRoomsBeds #erroomsAndBeds table tbody tr td,
-        #erNotOnBed #erNotOnBeds table tbody tr td {
+      #erRoomsBeds #erroomsAndBeds table tbody tr td {
             max-width: unset;
             overflow: visible;
             text-overflow: unset;
@@ -1351,14 +1354,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-bind="attr: { id: 'try_col' + sys_key() }">
+                                <tr data-bind="attr: { id: 'try_col' + sys_key() }" >
                                     <td>
                                         <img src="assets/images/beacon_light.gif" alt="" />
                                     </td>
                                     <td>
-                                        <h4 style="font-size: 23px; font-weight: 300; color: #019bd7;"
+                                        <h4 style="font-size: 23px; font-weight: bold; color: #019bd7;"
                                             data-bind="text: latin_desc, attr: { id: 'spnNS' + sys_key() }"></h4>
-                                        <p style="font-size: 15px; font-weight: 300;"></p>
+                                        <p style="font-size: 15px; font-weight: bold;"></p>
                                     </td>
                                     <td data-bind="text: waitingPatients().length"></td>
                                     <td data-bind="text: TotalTrt"></td>
@@ -1843,7 +1846,7 @@
                     </div>
 
                     <div id="erroomsAndBeds" data-bind="foreach: roomsAndBeds">
-                        <table class="table" style="border: 0; padding: 0; border-spacing: 0; margin: 0; width: 100%">
+                        <table class="table hideTest" style="border: 0; padding: 0; border-spacing: 0; margin: 0; width: 100%">
 
 
                             <thead>
@@ -2028,7 +2031,7 @@
                     In Cubicle/Bed
                 </div>
                 <div id="erroomsAndBedsM" data-bind="foreach: roomsAndBeds()">
-                    <table class="roomTabular"
+                    <table class="roomTabular hideTest"
                            style="border: 0; padding: 0; border-spacing: 0; margin: 0; width: 100%">
                         <thead>
                             <tr>

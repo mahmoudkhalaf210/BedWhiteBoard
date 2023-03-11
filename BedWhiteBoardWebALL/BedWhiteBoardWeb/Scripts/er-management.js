@@ -790,7 +790,7 @@ var mnuTrtmsOnBedItemClicked = function (e) {
 
                                         bed.sex('free');
                                         bed.pSex('');
-                                        bed.patient_id(null);
+                                        bed.patient_id(0);
                                         bed.patient_sex('');
                                         bed.patengname('');
                                         // add by khalifa  ageicon      bed.Chief_Complaint('');
@@ -954,7 +954,7 @@ var mnuTrtmsOnBedItemClicked = function (e) {
                                                 // Empty the fromBed
                                                 bed.sex('free');
                                                 bed.pSex('');
-                                                bed.patient_id(null);
+                                                bed.patient_id(0);
                                                 bed.patient_sex('');
                                                 bed.patengname('');
                                                 // add by khalifa Chief_Complaint;
@@ -2783,7 +2783,6 @@ var Nursestation = function (Ns) {
         ko.utils.arrayForEach(self.roomsAndBeds(), function (room) {
 
             ko.utils.arrayForEach(room.beds(), function (bed) {
-                console.log(bed)
                 if (bed.patient_id() != 0) {
                     voccupiedBeds += 1;
 
@@ -3218,7 +3217,7 @@ var Nursestation = function (Ns) {
 
                     // edit by khalifa replace 7 to 14 because increase some column
                     rows.find("td:nth-child(14)").filter(":containsIN('" + uId + "')").parent().show();
-                    rows.find("td:nth-child(14)").filter(":containsIN('" + uId + "')").parent().prev().show();
+                    rows.find("td:nth-child(6)").filter(":containsIN('" + uId + "')").parent().show();
                 }
                 else
                     var rows = $("#erPatients table tbody").find("tr").show();
@@ -3982,6 +3981,7 @@ function selectBed(SBedKey) {
     if (moveInfo != "MoveBedtoBed") {
         if (moveInfo == "HPtoBed") {
             if (NoRoster == 1) {
+
                 var frombk = selectedNotOnBed.sys_key();
                 var pId = selectedNotOnBed.patient_id();
                 var ek = selectedNotOnBed.episodekey();
@@ -3992,6 +3992,7 @@ function selectBed(SBedKey) {
                 var bk = BedSelected;
                 selectedWP = selectedBed;
                 MoveHPToBed(uId, BedSelected, sKey, pId, ek);
+       
                 return;
             }
             else {
@@ -4095,11 +4096,6 @@ function selectBed(SBedKey) {
 
                                     $(".free .OrderTimeUpnormal").removeClass("OrderTimeUpnormal")
                                     $(".free .ordertimeNormal").removeClass("ordertimeNormal")
-
-                                    console.log(bed.patientId)
-                                    console.log(bed.emr_status)
-                                    console.log(bed.status)
-
 
 
 
@@ -4483,11 +4479,8 @@ function selectDoctor(elm, arg) {
                                             return false;
                                         }
                                     });
-
+                                    $('#doctorsList').css('display', 'block');
                                     UpdateMnuWps(ns);
-
-
-
                                 });
                             }
                         });
@@ -4704,11 +4697,7 @@ function selectDoctor(elm, arg) {
             $("#loader-wrapper").fadeIn("slow", function () {
                 $("#loader-wrapper").show();
             });
-            $.getJSON("BedManagementApiActions/WaitingPatients/CheckMaximumCapacity?uId=" + uId + "&Ns=" + openedNS, function (allData) {
-                if (allData == 0) {
-                    DevExpress.ui.notify("Area reached Maximum Capacity.", "warning", 1500);
-                    return;
-                } else {
+      
 
                     $.ajax({
                         type: "POST",
@@ -4869,8 +4858,8 @@ function selectDoctor(elm, arg) {
                             console.log(error.responseText);
                         }
                     });
-                }
-            })
+                
+            
 
             $("#loader-wrapper").fadeIn("slow", function () {
                 $("#loader-wrapper").hide();
@@ -6630,10 +6619,14 @@ var RoomBeds = function (roomBeds) {
     self.OpenNurseTasks = function () {
         //alert(self.patient_id());
         ///NursingCareUI/Nursingcare.html?hospitalid=1&userkey=616&lang=0&dbcode=0&ismobile=0&mrn=33391&visit_type=er or inp or out
-        var url = "/NursingCareUI/Nursingcare.html?hospitalid=" + hospitalid + "&userkey=" + uId + "&lang=0&dbcode=" + dbcode + "&ismobile=0&mrn=" + self.patient_id() + "&visit_type=er";
-        $('#framLog').attr("src", "");
-        $('#framLog').attr("src", url);
-        $('#logviewer').modal('show');
+        console.log(self.patient_id())
+        if ( self.patient_id() != '') {
+            var url = "/NursingCareUI/Nursingcare.html?hospitalid=" + hospitalid + "&userkey=" + uId + "&lang=0&dbcode=" + dbcode + "&ismobile=0&mrn=" + self.patient_id() + "&visit_type=er";
+            $('#framLog').attr("src", "");
+            $('#framLog').attr("src", url);
+            $('#logviewer').modal('show');
+        }
+  
     }
 
 
@@ -7090,7 +7083,16 @@ $(document).ready(function () {
                                     foundNs = ns;
                                     foundBed = bed;
                                     $("#txtTrtSearch" + ns.sys_key()).val(searchtext);
-                                    var rows = $("#txtTrtSearch" + ns.sys_key()).parent().parent().parent().children().find("#erRoomsBeds").find("#erroomsAndBeds").children().find("tbody tr").hide()
+
+                                    console.log(bed.sys_key());
+                                    var rows = $("#txtTrtSearch" + ns.sys_key()).parent().parent().parent().children().find("#erRoomsBeds").find("#erroomsAndBeds").children().find("tbody tr ");
+
+                                    // add by khalifa to show Bed Search in Treatment
+                                    $("#bedId" + bed.sys_key()).parent().children().hide();
+                                    $("#bedId" + bed.sys_key()).show();
+
+
+
                                     //   var rows = $(this).parents(2).next().children().first().find("tbody tr").css({ "background-color": "red", "border": "2px solid red" }).hide();
                                     //  var rows = $("#txtTrtSearch" + ns.sys_key()).parent().parent().parent().pare.addClass("addBorderSearch")
                                     //  var rows = $("#txtTrtSearch" + ns.sys_key()).parents(2).next().children().first().find("tbody tr").addClass("addBorderSearch").hide();
@@ -7102,6 +7104,10 @@ $(document).ready(function () {
                                         rows.find("td:nth-child(5)").filter(":containsIN('" + v + "')").parent().prev().addClass("addBorderSearch").show();
                                     });
                                 }
+
+
+
+
                             }
                         })
 
@@ -7122,8 +7128,10 @@ $(document).ready(function () {
 
                                     var data = searchtext.split(" ");
                                     $.each(data, function (i, v) {
-                                        rows.find("td:contains('" + v + "')").parent().addClass("addBorderSearch").show();
+                                       rows.find("td:contains('" + v + "')").parent().addClass("addBorderSearch").show();
                                         rows.find("td:contains('" + v + "')").parent().prev().addClass("addBorderSearch").show();
+
+
                                         /*   rows.find("td:nth-child(1)").filter(":containsIN('" + v + "')").parent().show();
                                            rows.find("td:nth-child(1)").filter(":containsIN('" + v + "')").parent().prev().show();
                                            rows.find("td:nth-child(2)").filter(":containsIN('" + v + "')").parent().show();
@@ -7733,7 +7741,8 @@ function MoveHPToBed(docId, bedKey, sKey, patientId, episodeKey) {
                                 return false;
                             }
                         });
-
+                        alert("display")
+                        $('#doctorsList').css('display', 'block');
                         UpdateMnuWps(ns);
 
 
