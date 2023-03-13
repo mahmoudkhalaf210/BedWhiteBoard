@@ -3159,7 +3159,55 @@ var Nursestation = function (Ns) {
 
             });
 
-            $("#txtTrtSearch" + openedNS).keyup(function () {
+            //    const table = document.getElementById("my-table");
+
+
+
+            ko.utils.arrayForEach(vm.nursestations(), function (ns) {
+                if (ns.sys_key() == openedNS) {
+
+            const input = document.getElementById("txtTrtSearch" + openedNS);
+            input.addEventListener("keyup", function () {
+
+  
+
+                var table = $("#roomId" + ns.roomsAndBeds()[0].room_key()).find("tbody tr").next();
+                const value = this.value.toLowerCase().trim();
+
+                if (value != "") {
+                    for (let i = 0; i < table.length; i++) {
+
+                        const rowData = table[i].textContent.toLowerCase();
+                        if (rowData.indexOf(value) > -1) {
+                            table[i].style.display = "";
+                        } else {
+                            table[i].style.display = "none";
+                        }
+                    }
+
+                }
+            })
+
+            }
+
+
+                
+
+
+            })
+
+              
+
+           
+
+
+
+
+
+        
+
+
+          /*  $("#txtTrtSearch" + openedNS).keyup(function () {
                 //console.log(.parents(2).next().children().first().find("tbody tr"));
                 if ($(this).val() != "") {
                     var rows = $(this).parents(2).next().children().find("tbody tr").hide();
@@ -3168,17 +3216,17 @@ var Nursestation = function (Ns) {
                         rows.find("td:contains('" + v + "')").parent().show();
                         rows.find("td:contains('" + v + "')").parent().prev().show();
 
-                        /*                      rows.find("td:nth-child(3)").filter(":containsIN('" + v + "')").parent().show();
+                        *//*                      rows.find("td:nth-child(3)").filter(":containsIN('" + v + "')").parent().show();
                                                 rows.find("td:nth-child(3)").filter(":containsIN('" + v + "')").parent().prev().show();
                                                 rows.find("td:nth-child(4)").filter(":containsIN('" + v + "')").parent().show();
-                                                rows.find("td:nth-child(4)").filter(":containsIN('" + v + "')").parent().prev().show();*/
+                                                rows.find("td:nth-child(4)").filter(":containsIN('" + v + "')").parent().prev().show();*//*
                     });
                 }
                 else
                     var rows = $(this).parents(2).next().children().first().find("tbody tr").show();
 
             });
-
+*/
             if (vw == 0) {
 
             }
@@ -7084,7 +7132,6 @@ $(document).ready(function () {
                                     foundBed = bed;
                                     $("#txtTrtSearch" + ns.sys_key()).val(searchtext);
 
-                                    console.log(bed.sys_key());
                                     var rows = $("#txtTrtSearch" + ns.sys_key()).parent().parent().parent().children().find("#erRoomsBeds").find("#erroomsAndBeds").children().find("tbody tr ");
 
                                     // add by khalifa to show Bed Search in Treatment
