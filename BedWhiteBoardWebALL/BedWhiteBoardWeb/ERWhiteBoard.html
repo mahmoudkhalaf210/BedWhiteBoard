@@ -1975,6 +1975,9 @@
                         <thead>
                             <tr class="t_header">
                                 <th style="max-width:10px"></th>
+                                
+<!--                                add time to patient by khalifa-->                 
+                                <th style="margin: 0; text-align: center; vertical-align: middle;">Treatment Time</th>
 
 
                                 <th style="margin: 0; text-align: center; min-width: 30px">MRN</th>
@@ -1991,6 +1994,13 @@
                             <tr data-bind="attr: { 'title':'Seen By Doctor time: ' + seenbyerdoctor_time() + ', Waiting Area Time: ' + waitingarea_time() , 'id': 'pId' + patient_id(), 'class': 'bedTabular ' + sex() }, event: { 'contextmenu': notOnBedRightClick ,mouseover: NotBedMouseMove }">
                                 <td>
                                     <i data-bind="click: ShowHPMenu" class="arrow down"></i>
+                                </td>
+
+                                <!--                                add time to patient by khalifa-->
+                                <td style="margin: 0; text-align: center;" data-bind="css:onbed_timeClass">
+                                    <!-- ko if: patient_id -->
+                                    <span data-bind="text: onbed_time "></span>
+                                    <!-- /ko -->
                                 </td>
 
                                 <td data-bind="text: patient_id, attr: { title: patient_id }, click: NotOnBedClick" style="margin: 0; text-align: center;"></td>
@@ -2095,6 +2105,9 @@
                            style="border: 0; padding: 0; border-spacing: 0; margin: 0; width: 100%">
                         <thead>
                             <tr>
+                                <!--                                add time to patient by khalifa-->
+                                <th style="margin: 0; text-align: center; vertical-align: middle;">Treatment Time</th>
+
                                 <th style="margin: 0; text-align: center; width: 50px;">
                                     MRN
                                 </th>
@@ -2117,6 +2130,10 @@
                         </thead>
                         <tbody data-bind="foreach: notOnBeds">
                             <tr data-bind="attr: { 'id': 'pId' + patient_id(), 'class': 'bedTabular ' + sex() }">
+                                <!--                                add time to patient by khalifa-->
+                                <td style="margin: 0; text-align: center;" data-bind="css:onbed_timeClass">
+                                    <span data-bind="text: onbed_time "></span>
+                                </td>
                                 <td data-bind="text: patient_id"
                                     style="margin: 0; text-align: center; width: 50px;"></td>
                                 <td data-bind="text: patengname"

@@ -5631,8 +5631,21 @@ var RoomAndBeds = function (roomWBeds) {
     self.size = ko.observable(roomWBeds.size);
     self.width = roomWBeds.size == null ? ko.observable() : ko.observable((parseInt(roomWBeds.size.split(',')[0]) - 15) + 'px');
     self.height = roomWBeds.size == null ? ko.observable() : ko.observable((parseInt(roomWBeds.size.split(',')[1]) - 15) + 'px');
-    self.allBeds = ko.observableArray($.map(roomWBeds.beds, function (roomBeds) { return new RoomBeds(roomBeds) }));
+    self.allBeds = ko.observableArray($.map(roomWBeds.beds, function (roomBeds) {
+
+     
+
+
+        return new RoomBeds(roomBeds)
+    }));
     self.SelectedValue = ko.observable();
+
+
+
+
+
+
+
 
     //console.log(self.allBeds());
 
@@ -5648,6 +5661,11 @@ var RoomAndBeds = function (roomWBeds) {
 
     self.beds = ko.computed(function () {
 
+
+
+
+
+
         self.allBeds().sort(function (l, r) {
             return (l.sys_key() == r.sys_key()) ? (l.iswaitingarea() > r.iswaitingarea() ? 1 : -1) : (l.sys_key() > r.sys_key() ? 1 : -1)
         });
@@ -5655,6 +5673,129 @@ var RoomAndBeds = function (roomWBeds) {
         bedsArray = ko.observableArray([]);
         var prevBedId;
         ko.utils.arrayForEach(self.allBeds(), function (bed) {
+
+            // treatment time start
+            self.seenbyerdoctor_time = ko.observable(bed.seenbyerdoctor_time);
+            var start = new Date(bed.seenbyerdoctor_time).getTime();
+            var end = new Date().getTime();
+
+            var diff = end - start;
+            var minutes = Math.floor((diff / 1000) / 60);
+            if (minutes == NaN) {
+                minutes = 0;
+            }
+
+            self.onbed_time = ko.observable(minutes);
+            if (bed.seenbyerdoctor_time() == "") {
+                bed.onbed_time("--")
+            }
+            self.onbed_timeClass = ko.observable("ordertimeNormal");
+            if (bed.iswaitingarea() == 1 | bed.patient_id() == "") {
+                bed.onbed_timeClass("");
+
+            }
+            self.onbed_time.subscribe(function (newValue) {
+
+                if (bed.iswaitingarea() == 1 | bed.patient_id() == "") {
+                    bed.onbed_timeClass("");
+
+                    return;
+                }
+
+                if (newValue == "--") {
+                    bed.onbed_timeClass("ordertimeNormal");
+                } else if (String(newValue).includes("Days") | String(newValue).includes("يوم")) {
+                    bed.onbed_timeClass("OrderTimeUpnormal");
+                } else if (newValue == "") {
+                    bed.onbed_timeClass("");
+                } else {
+                    bed.onbed_timeClass("ordertimeNormal");
+                }
+
+                // remove colors
+
+                $(".free .OrderTimeUpnormal").removeClass("OrderTimeUpnormal")
+                $(".free .ordertimeNormal").removeClass("ordertimeNormal")
+
+
+
+            })
+            if (bed.onbed_time() > 0 && bed.iswaitingarea() == 0 && bed.patient_id() != "") {
+                var total = Number(bed.onbed_time());
+                var hrs = Math.floor(total / 60);
+                var min = total % 60;
+                var isdone = 0;
+                if (hrs > 24) {
+                    bed.onbed_time("+Days");
+                    isdone = 1;
+                }
+                if (hrs == 0 & isdone == 0) {
+                    bed.onbed_time(min + "M");
+                    isdone = 1;
+                }
+                if (hrs > 0 & min == 0 && isdone == 0) {
+                    bed.onbed_time(hrs + "H");
+                    isdone = 1;
+                }
+                if (hrs > 0 & min > 0 && isdone == 0) {
+                    bed.onbed_time(hrs + "H:" + min + "M");
+                }
+            }
+            self.CalcOnBedTime = function () {
+                var start = new Date(bed.seenbyerdoctor_time()).getTime();
+                var end = new Date().getTime();
+                var diff = end - start;
+                var minutes = Math.floor((diff / 1000) / 60);
+                if (minutes == NaN) {
+                    minutes = 0;
+                }
+                bed.onbed_time(minutes);
+                if (bed.seenbyerdoctor_time() == "") {
+                    bed.onbed_time("--")
+                }
+
+                if (bed.iswaitingarea() == 1 | bed.patient_id() == "") {
+                    bed.onbed_timeClass("");
+                    bed.onbed_time("");
+                    return;
+                }
+
+
+                if (bed.onbed_time() > 0) {
+                    var total = Number(bed.onbed_time());
+                    var hrs = Math.floor(total / 60);
+                    var min = total % 60;
+                    if (hrs > 24) {
+                        self.onbed_time("+Days")
+                        return;
+                    }
+                    if (hrs == 0) {
+                        self.onbed_time(min + "M");
+                        return;
+                    }
+                    if (hrs > 0 & min == 0) {
+                        self.onbed_time(hrs + "H");
+                        return;
+                    }
+                    if (hrs > 0 & min > 0) {
+                        self.onbed_time(hrs + "H:" + min + "M");
+                    }
+                }
+
+                // remove colors
+                $(".free .OrderTimeUpnormal").removeClass("OrderTimeUpnormal")
+                $(".free .ordertimeNormal").removeClass("ordertimeNormal")
+
+
+
+            }
+
+    // treatment time end 
+
+
+
+
+
             if (bed.sys_key() != prevBedId) {
                 bedsArray.push(bed);
             }
@@ -6449,9 +6590,10 @@ var RoomBeds = function (roomBeds) {
     self.clinickey = ko.observable(roomBeds.clinickey);
     self.nurse = ko.observable(roomBeds.nurse);
     self.price = ko.observable(roomBeds.price);
+
+
+    // treatment time start
     self.seenbyerdoctor_time = ko.observable(roomBeds.seenbyerdoctor_time);
-
-
     var start = new Date(roomBeds.seenbyerdoctor_time).getTime();
     var end = new Date().getTime();
 
@@ -6465,10 +6607,6 @@ var RoomBeds = function (roomBeds) {
     if (self.seenbyerdoctor_time() == "") {
         self.onbed_time("--")
     }
-
-
-
-
     self.onbed_timeClass = ko.observable("ordertimeNormal");
     if (self.iswaitingarea() == 1 | self.patient_id() == "") {
         self.onbed_timeClass("");
@@ -6500,8 +6638,6 @@ var RoomBeds = function (roomBeds) {
 
 
     })
-
-
     if (self.onbed_time() > 0 && self.iswaitingarea() == 0 && self.patient_id() != "") {
         var total = Number(self.onbed_time());
         var hrs = Math.floor(total / 60);
@@ -6523,10 +6659,6 @@ var RoomBeds = function (roomBeds) {
             self.onbed_time(hrs + "H:" + min + "M");
         }
     }
-
-
-
-
     self.CalcOnBedTime = function () {
         var start = new Date(self.seenbyerdoctor_time()).getTime();
         var end = new Date().getTime();
@@ -6575,6 +6707,10 @@ var RoomBeds = function (roomBeds) {
 
 
     }
+
+    // treatment time end 
+
+
 
     self.dischargeorderdate = ko.observable(roomBeds.dischargeorderdate);
     self.nursestationcode = ko.observable(roomBeds.nursestationcode);
